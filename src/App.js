@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import Todo from './Todo';
-import { Button, FormControl, Input, InputLabel } from '@material-ui/core';
+import {
+	Button,
+	FormControl,
+	Input,
+	InputLabel,
+	Container,
+} from '@material-ui/core';
+import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
 import db from './firebase';
 import firebase from 'firebase';
 
@@ -13,7 +20,9 @@ const App = () => {
 		db.collection('todos')
 			.orderBy('timestamp', 'desc')
 			.onSnapshot((snapshot) => {
-				setTodos(snapshot.docs.map((doc) => doc.data().todo));
+				setTodos(
+					snapshot.docs.map((doc) => ({ id: doc.id, todo: doc.data().todo }))
+				);
 			});
 	}, []);
 
@@ -29,11 +38,11 @@ const App = () => {
 	};
 
 	return (
-		<div className='App'>
+		<Container className='App'>
 			<h1>React Todo App</h1>
 			<form action=''>
 				<FormControl>
-					<InputLabel>Add Todo</InputLabel>
+					<InputLabel>Add Todo 🖊 </InputLabel>
 					<Input
 						type='text'
 						value={input}
@@ -47,6 +56,7 @@ const App = () => {
 					onClick={addTodos}
 					disabled={!input}
 				>
+					<PlaylistAddCheckIcon />
 					Add Todo
 				</Button>
 				<ul>
@@ -55,7 +65,7 @@ const App = () => {
 					))}
 				</ul>
 			</form>
-		</div>
+		</Container>
 	);
 };
 
